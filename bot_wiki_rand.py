@@ -1,5 +1,6 @@
 import re
 import requests
+from tg_token import token
 
 wiki_url = "https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D0%BD%D0%B0%D1%8F:%D0%A1%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0"
 get_url = requests.get(wiki_url)
@@ -35,13 +36,7 @@ def getURL():
 
 def botRequest():
     tg_url = "https://api.telegram.org/bot"
-    token = "1709431509:AAH8MMaYwj9u4cCSoZEDIfCKcMKTfkuwdJ4"
     method = "/sendMessage?"
-    # message_text = {
-    #     "chat_id": "@wiki_shit",
-    #     "text": getText() + F"\n[Ссылка]({getURL()})",
-    #     "parse_mode": "MarkdownV2",
-    #     "disable_web_page_preview": True}
     tg_request = requests.post(
         url = tg_url + token + method,
         json = {
@@ -51,7 +46,6 @@ def botRequest():
             "disable_web_page_preview": True
         }
     )
-    # tg_request = requests.get(tg_url + token + method + message_text + F"&{parse_mode}" + F"&{disable_web_page_preview}")
     print(tg_request.text)
 
 if __name__ == "__main__":
