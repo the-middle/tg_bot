@@ -20,7 +20,7 @@ def getText():
         x = re.sub(r"[\[''\]]", '', x)  
         x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)     
         return x
-    elif get_url.text.find("<p><i>") != 1:
+    elif get_url.text.find("<p><i>") != -1:
         stripped_string = re.findall(r'<p><i>.*[.</p>]', get_url.text)
         x = str(stripped_string)
         x = re.sub(r'<.*?>', '', x)
