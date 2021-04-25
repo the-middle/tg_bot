@@ -41,6 +41,19 @@ def getURL():
     link_str = re.sub(r"\"/>\\'\]'\]", '', link_str)
     return link_str
 
+def getImg():
+    if get_url.text.find(r'infobox-image') != -1:
+        link_img = str(re.findall(r'<table class="infobox.*</table>', get_url.text))
+        print(link_img)
+        link_img = str(re.findall(r'<img.* />', link_img))
+        print(link_img)
+        link_img = str(re.findall(r'src=".*"', link_img))
+        print(link_img)
+        link_img = str(re.findall(r'upload.[^\s]*"', link_img))
+        print(link_img)
+        link_img = re.sub(r'"', '', link_img)
+        print(link_img)
+        return link_img
 
 def botRequest():
     tg_url = "https://api.telegram.org/bot"
@@ -49,7 +62,7 @@ def botRequest():
         url = tg_url + token + method,
         json = {
             "chat_id": "@wiki_shit",
-            "text": getText() + F"\n<a href=\"{getURL()}\">Ссылка</a>",
+            "text": getText() + F"\n<a href=\"{getURL()}\">Ссылка</a>" + F"<a href=\"{getImg()}\"></a>",
             "parse_mode": "HTML",
             "disable_web_page_preview": True
         }
