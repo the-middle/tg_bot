@@ -23,6 +23,7 @@ def getText():
         x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)     
         return x
     else: 
+        #TODO: catch the <p>[symbol]<b> and <p> Text.
         return "Попалась неинтересная статья, повезет в следующий раз."
 
 def getURL():
