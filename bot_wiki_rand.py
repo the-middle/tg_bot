@@ -6,18 +6,12 @@ wiki_url = "https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D
 get_url = requests.get(wiki_url)
 
 def getText():
-    # Find if paragraph pattern present in string
-    if get_url.text.find("<p><b>") != -1:
-        # Get this string
-        stripped_string = re.findall(r'<p><b>.*[.</p>]', get_url.text)
-        # Transform into string from an object
-        x = str(stripped_string)
-        # Delete all HTML tags
-        x = re.sub(r'<.*?>', '', x)
-        # Delete encoded special symbols
-        x = re.sub(r'&#\d*;', '', x)
-        # Delete [] and '' that was added while transforming to string
-        x = re.sub(r"[\[''\]]", '', x)  
+    if get_url.text.find("<p><b>") != -1:                                                       # Find if paragraph pattern present in string
+        stripped_string = re.findall(r'<p><b>.*[.</p>]', get_url.text)                          # Get this string
+        x = str(stripped_string)                                                                # Transform into string from an object
+        x = re.sub(r'<.*?>', '', x)                                                             # Delete all HTML tags
+        x = re.sub(r'&#\d*;', '', x)                                                            # Delete encoded special symbols
+        x = re.sub(r"[\[''\]]", '', x)                                                          # Delete [] and '' that was added while transforming to string
         x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)     
         return x
     elif get_url.text.find("<p><i>") != -1:
@@ -32,12 +26,9 @@ def getText():
         return "Попалась неинтересная статья, повезет в следующий раз."
 
 def getURL():
-    # Get the needed part of a string
-    link_str = str(re.findall(r'<link rel="canonical".*[.\/>]', get_url.text))
-    # Get just url
-    link_str = str(re.findall(r'\bhttps?://[^\s]+[^"/>]', link_str))
-    # Delete brackets from str()
-    link_str = re.sub(r"\['", '', link_str)
+    link_str = str(re.findall(r'<link rel="canonical".*[.\/>]', get_url.text))                  # Get the needed part of a string
+    link_str = str(re.findall(r'\bhttps?://[^\s]+[^"/>]', link_str))                            # Get just url
+    link_str = re.sub(r"\['", '', link_str)                                                     # Delete brackets from str()
     link_str = re.sub(r"\"/>\\'\]'\]", '', link_str)
     return link_str
 
@@ -47,7 +38,6 @@ def getImg():
         link_img = str(re.findall(r'<img.* />', link_img))
         link_img = str(re.findall(r'src=".*"', link_img))
         link_img = re.findall(r'upload.[^\s]*"', link_img)
-        # print(link_img)
         if re.search(r'pictogram', link_img[0]) == None:
             link_img = re.sub(r'"', '', link_img[0])
             link_img = 'https://' + link_img
