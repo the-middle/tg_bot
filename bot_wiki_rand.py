@@ -6,13 +6,39 @@ wiki_url = "https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D1%83%D0%B6%D0%B5%D0%B1%D
 get_url = requests.get(wiki_url)
 
 
+class goto(Exception):
+    pass
+
+
 def getText():
-    if get_url.text.find("<p>") != -1:
+    if get_url.text.find("<p><b>") != -1:
         x = re.findall(r'<p>.*[.</p>]', get_url.text)
         x = re.sub(r'<.*?>', '', x[0])
         x = re.sub(r'&#\d*;', '', x)
         x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)
         return x
+    elif get_url.text.find("<p>") != -1:
+        x = re.findall(r'<p>.*[.</p>]', get_url.text)
+        if x[0] != '':
+            x = re.sub(r'<.*?>', '', x[0])
+            x = re.sub(r'&#\d*;', '', x)
+            x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)
+            return x
+        elif x[1] != '':
+            x = re.sub(r'<.*?>', '', x[1])
+            x = re.sub(r'&#\d*;', '', x)
+            x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)
+            return x
+        elif x[2] != '':
+            x = re.sub(r'<.*?>', '', x[2])
+            x = re.sub(r'&#\d*;', '', x)
+            x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)
+            return x
+        else:
+            x = re.sub(r'<.*?>', '', x[3])
+            x = re.sub(r'&#\d*;', '', x)
+            x = re.sub(r"(([А-я])(\d{1,3}))", r"\g<2>", x)
+            return x
     else:
         return "Попалась неинтересная статья, повезет в следующий раз."
 
@@ -26,29 +52,36 @@ def getURL():
 
 def getImg():
     if re.search(r'class="infobox-image"', get_url.text) != None:
-        link_img = re.findall(r'class="infobox.*<\/', get_url.text)
+        link_img = re.findall(r'class="infobox-image.*<\/', get_url.text)
         link_img = re.findall(r'<img.* />', link_img[0])
         link_img = re.findall(r'src=".*"', link_img[0])
-        if re.search(r'upload.[^\s]+ 2x', link_img[0]) != None:
-            link_img = re.findall(r'upload.[^\s]+ 2x', link_img[0])
-            link_img = re.sub(r' 2x', '', link_img[0])
-            link_img = 'https://' + link_img
-            return link_img
-        else:
-            if re.search(r'pictogram|mark', link_img[0]) == None: # Drop the icons on some pages in infobox table. Unfortunately, python don't have switch().
+        try:
+            if re.search(r'upload.[^\s]+ 2x', link_img[0]) != None:
+                link_img = re.findall(r'upload.[^\s]+ 2x', link_img[0])
+                if re.search(r'pictogram|mark|Ice_hockey_puck', link_img[0]) == None:
+                    link_img = re.sub(r' 2x', '', link_img[0])
+                    link_img = 'https://' + link_img
+                    return link_img
+                else:
+                    raise goto()
+            else:
+                raise goto()
+        except goto():
+            # Drop the icons on some pages in infobox table. Unfortunately, python don't have switch().
+            if re.search(r'pictogram|mark|Ice_hockey_puck', link_img[0]) == None:
                 link_img = re.sub(r'"', '', link_img[0])
                 link_img = 'https://' + link_img
                 print(link_img)
                 return link_img
-            elif re.search(r'pictogram|mark', link_img[1]) == None:
+            elif re.search(r'pictogram|mark|Ice_hockey_puck', link_img[1]) == None:
                 link_img = re.sub(r'"', '', link_img[1])
                 link_img = 'https://' + link_img
                 return link_img
-            elif re.search(r'pictogram|mark', link_img[2]) == None:
+            elif re.search(r'pictogram|mark|Ice_hockey_puck', link_img[2]) == None:
                 link_img = re.sub(r'"', '', link_img[2])
                 link_img = 'https://' + link_img
                 return link_img
-            elif re.search(r'pictogram|mark', link_img[3]) == None:
+            elif re.search(r'pictogram|mark|Ice_hockey_puck', link_img[3]) == None:
                 link_img = re.sub(r'"', '', link_img[3])
                 link_img = 'https://' + link_img
                 return link_img
